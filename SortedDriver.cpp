@@ -1,4 +1,8 @@
 // SortedDriver.cpp
+// Robert Randoph
+// COSC 2030, Section 10
+// Lab06
+// October 23, 2017
 
 // tom bailey   1445  25 mar 2014
 // Construct sorted sequences and call functions that 
@@ -63,8 +67,31 @@ getWords(size_t numWords, size_t wordLength, string alphabet)
 double
 mostIsolated(vector<double> & number)
 {
-	// STUB  STUB  STUB
-	return -123.456;
+	double isolated = number.front();	// Most isolated number.
+	double prevRange(0);				// Range difference between previous neighbor.
+	double nextRange(0);				// Range difference between next neighbor.
+	double lowestRange(0);				// Lowest range of the most isolated number.
+
+	for (vector<double>::iterator iter = number.begin(); iter != number.end(); iter++) {
+		if (iter != number.begin()) prevRange = nextRange;						// Range of previous neighbor
+		else if (next(iter) != number.end()) prevRange = *next(iter) - *iter;	// Number was at beginning of vector.
+		else prevRange = 0;														// Only one number in vector.
+		if (next(iter) != number.end()) nextRange = *next(iter) - *iter;		// Range of next neighbor
+		else nextRange = prevRange;												// Number was at end of vector.
+
+	/*	Finding which range was smaller.
+		If the smaller range was bigger then the current smallest range of the isolated number.
+		then the current number is more isolated. */
+		if ((prevRange <= nextRange) && (prevRange > lowestRange)) {
+			isolated = *iter;
+			lowestRange = prevRange;
+		}
+		else if ((nextRange <= prevRange) && (nextRange > lowestRange)) {
+			isolated = *iter;
+			lowestRange = nextRange;
+		}
+	}
+	return isolated;
 }
 
 
@@ -74,8 +101,22 @@ mostIsolated(vector<double> & number)
 int
 unmatched(list<string> & A, list<string> & B)
 {
-	// STUB  STUB  STUB
-	return -1;
+	int found(0);	// Number of strings that were found to be alone in list A.
+	
+	list<string>::iterator itera = A.begin();
+	list<string>::iterator iterb = B.begin();
+
+	// Looking through list A.
+	for (itera; itera != A.end(); itera++) {
+
+		// Looking through list B until an A string isn't after B string alphabetically.
+		while ((*itera > *iterb) && (iterb != B.end())) {
+			iterb++;
+		}
+		if (*itera != *iterb) found++;
+	}
+
+	return found;
 }
 
 
